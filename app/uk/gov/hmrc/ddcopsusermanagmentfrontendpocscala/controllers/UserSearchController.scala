@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.config
+package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.controllers
 
+import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.UserSearchPage
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import scala.concurrent.Future
 
 @Singleton
-class AppConfig @Inject()
-  (
-    config: Configuration
-  ) {
-  val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
+class UserSearchController @Inject()(
+  mcc: MessagesControllerComponents,
+  userSearchPage: UserSearchPage)
+    extends FrontendController(mcc) {
+
+        val userSearch: Action[AnyContent] = Action.async { implicit request =>
+              Future.successful(Ok(userSearchPage()))
+  }
 
 }
