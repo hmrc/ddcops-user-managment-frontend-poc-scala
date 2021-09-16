@@ -35,7 +35,7 @@ class UserSearchController @Inject() (
 
   def userSearch(query: String): Action[AnyContent] = Action.async { implicit request =>
     userConnector
-      .search(query)
+      .search(query, size = 10)
       .map(users =>
         request.headers.get("X-Requested-With") match {
           case Some("XMLHttpRequest") => Ok(Json.toJson(users))

@@ -35,14 +35,16 @@ class UserConnector @Inject() (httpClient: HttpClient, configuration: Configurat
     )
 
   implicit val readsUser: Reads[User] = (
-    (JsPath \ "name" \ "title").read[String] and
-      (JsPath \ "name" \ "first").read[String]
+    (for {
+      first <- (JsPath \ "name" \ "first").read[String]
+      last  <- (JsPath \ "name" \ "last").read[String]
+    } yield s"$first $last") and
+      (JsPath \ "email").read[String] and
+      (JsPath \ "login" \ "username").read[String]
   )(User.apply _)
 
-  def search(query: String)(implicit hc: HeaderCarrier): Future[List[User]] =
-    // TODO get more results at a time
-    // TODO pagination offset?
+  def search(query: String, size: Int)(implicit hc: HeaderCarrier): Future[List[User]] =
     httpClient
-      .GET[HttpResponse](url"$baseUrl?seed=$query")
+      .GET[HttpResponse](url"$baseUrl?seed=$query&results=$size")
       .map(response => Json.parse(response.body)("results").as[List[User]])
 }
