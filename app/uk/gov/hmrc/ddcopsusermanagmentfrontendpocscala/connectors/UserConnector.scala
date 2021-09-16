@@ -39,6 +39,8 @@ class UserConnector @Inject() (httpClient: HttpClient, configuration: Configurat
   )(User.apply _)
 
   def search(query: String)(implicit hc: HeaderCarrier): Future[List[User]] =
+    // TODO get more results at a time
+    // TODO pagination offset?
     httpClient
       .GET[HttpResponse](
         url = url"$baseUrl?seed=$query"

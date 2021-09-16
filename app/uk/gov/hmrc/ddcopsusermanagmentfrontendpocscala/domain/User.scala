@@ -17,3 +17,5 @@
 package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain
 
 case class User(title: String, firstName: String)
+
+// TODO define json writer for User

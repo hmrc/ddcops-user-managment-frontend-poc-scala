@@ -33,7 +33,9 @@ class UserSearchController @Inject() (
     extends FrontendController(mcc) {
 
   def userSearch(query: String): Action[AnyContent] = Action.async { implicit request =>
-    userConnector.search(query).map(users => Ok(userSearchPage(users)))
+    userConnector.search(query).map(users => Ok(userSearchPage(users, query)))
   }
+
+  // TODO have an autocomplete options endpoint?
 
 }
