@@ -16,20 +16,25 @@
 
 package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.controllers
 
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.connectors.UserConnector
 import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.UserSearchPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class UserSearchController @Inject()(
+class UserSearchController @Inject() (
   mcc: MessagesControllerComponents,
-  userSearchPage: UserSearchPage)
+  userSearchPage: UserSearchPage,
+  userConnector: UserConnector
+)(implicit val executionContext: ExecutionContext)
     extends FrontendController(mcc) {
 
-        val userSearch: Action[AnyContent] = Action.async { implicit request =>
-              Future.successful(Ok(userSearchPage()))
+  def userSearch(query: String): Action[AnyContent] = Action.async { implicit request =>
+    userConnector.search(query).map(users => Ok(userSearchPage(users, query)))
   }
 
+  // TODO have an autocomplete options endpoint?
 }
