@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.controllers
 
-import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.UserSearchPage
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.connectors.UserConnector
+import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.UserSearchPage
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class UserSearchController @Inject() (
@@ -37,5 +37,4 @@ class UserSearchController @Inject() (
   }
 
   // TODO have an autocomplete options endpoint?
-
 }

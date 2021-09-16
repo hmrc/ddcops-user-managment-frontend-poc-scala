@@ -20,6 +20,7 @@ import play.api.Configuration
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain.User
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http._
 
 import javax.inject.Inject
@@ -42,8 +43,6 @@ class UserConnector @Inject() (httpClient: HttpClient, configuration: Configurat
     // TODO get more results at a time
     // TODO pagination offset?
     httpClient
-      .GET[HttpResponse](
-        url = url"$baseUrl?seed=$query"
-      )
+      .GET[HttpResponse](url"$baseUrl?seed=$query")
       .map(response => Json.parse(response.body)("results").as[List[User]])
 }

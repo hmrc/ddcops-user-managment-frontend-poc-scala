@@ -15,32 +15,33 @@
  *@
 
 @import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain.User
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.Layout
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Button, GovukButton, GovukInput, Hint, Input, Label, Text}
 
-@this(layout: Layout, govukInput : GovukInput, govukButton: GovukButton)
+@this(layout: Layout, govukInput: GovukInput, govukButton: GovukButton)
 
 @(users: List[User], query: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = Some("ddcops-user-managment-frontend-poc-scala")) {
-    <form method="get">
-      @govukInput(Input(
-        id = "search",
-        name = "query",
-        value = Some(query),
-        label = Label(
-          isPageHeading = true,
-          classes = "govuk-label--xl",
-          content = Text("Search users")
-        ),
-        hint = Some(Hint(content = Text("Enter all or part of a user detail to search users")))
-      ))
-      @govukButton(Button(inputType=Some("submit"), content= Text("Search")))
-      @* TODO move button to be to the right of search field *@
-    </form>
-    <ul>
-      @* TODO output as a table *@
+  <form method="get">
+    @govukInput(Input(
+      id = "search",
+      name = "query",
+      value = Some(query),
+      label = Label(
+        isPageHeading = true,
+        classes = "govuk-label--xl",
+        content = Text("Search users")
+      ),
+      hint = Some(Hint(content = Text("Enter all or part of a user detail to search users")))
+    ))
+    @govukButton(Button(inputType = Some("submit"), content = Text("Search")))
+    @* TODO move button to be to the right of search field *@
+  </form>
+  <ul>
+    @* TODO output as a table *@
     @for(user <- users) {
       <li>@user.title @user.firstName</li>
     }
-    </ul>
+  </ul>
 }
