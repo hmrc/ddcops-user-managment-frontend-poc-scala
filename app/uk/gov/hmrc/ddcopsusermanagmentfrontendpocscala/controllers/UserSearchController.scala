@@ -32,8 +32,8 @@ class UserSearchController @Inject() (
 )(implicit val executionContext: ExecutionContext)
     extends FrontendController(mcc) {
 
-  def userSearch: Action[AnyContent] = Action.async { implicit request =>
-    userConnector.search("john").map(users => Ok(userSearchPage(users)))
+  def userSearch(query: String): Action[AnyContent] = Action.async { implicit request =>
+    userConnector.search(query).map(users => Ok(userSearchPage(users)))
   }
 
 }
