@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.controllers
 
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.connectors.UserConnector
 import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.UserSearchPage
@@ -33,7 +34,14 @@ class UserSearchController @Inject() (
     extends FrontendController(mcc) {
 
   def userSearch(query: String): Action[AnyContent] = Action.async { implicit request =>
-    userConnector.search(query).map(users => Ok(userSearchPage(users, query)))
+    userConnector
+      .search(query, size = 10)
+      .map(users =>
+        request.headers.get("X-Requested-With") match {
+          case Some("XMLHttpRequest") => Ok(Json.toJson(users))
+          case _                      => Ok(userSearchPage(users, query))
+        }
+      )
   }
 
   // TODO have an autocomplete options endpoint?

@@ -59,7 +59,7 @@ class UserConnectorSpec
   "user connector" should {
     "be able to fetch users" in {
       stubFor(
-        get(urlEqualTo("/api?seed=John"))
+        get(urlEqualTo("/api?seed=John&results=10"))
           .willReturn(
             aResponse()
               .withStatus(200)
@@ -71,6 +71,10 @@ class UserConnectorSpec
                   |         "title":"mr",
                   |         "first":"John",
                   |         "last":"Lennon"
+                  |      },
+                  |      "email": "john@lennon.com",
+                  |      "login": {
+                  |        "username": "jlennon4eva"
                   |      }
                   |    }
                   |  ]
@@ -78,11 +82,11 @@ class UserConnectorSpec
           )
       )
 
-      userConnector.search("John").futureValue shouldBe List(
-        User(title = "mr", firstName = "John")
+      userConnector.search("John", size = 10).futureValue shouldBe List(
+        User(fullName = "John Lennon", email = "john@lennon.com", username = "jlennon4eva")
       )
 
-      verify(getRequestedFor(urlEqualTo("/api?seed=John")))
+      verify(getRequestedFor(urlEqualTo("/api?seed=John&results=10")))
     }
   }
 }

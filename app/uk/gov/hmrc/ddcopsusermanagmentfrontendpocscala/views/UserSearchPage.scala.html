@@ -16,32 +16,72 @@
 
 @import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain.User
 @import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.views.html.Layout
-@import uk.gov.hmrc.govukfrontend.views.html.components.{Button, GovukButton, GovukInput, Hint, Input, Label, Text}
+@import uk.gov.hmrc.govukfrontend.views.html.components.{Button, GovukButton, GovukInput, GovukTable, HeadCell, Table, TableRow, Text}
+@import views.html.helper.CSPNonce
 
-@this(layout: Layout, govukInput: GovukInput, govukButton: GovukButton)
+@this(layout: Layout, govukInput: GovukInput, govukButton: GovukButton, govukTable: GovukTable)
 
 @(users: List[User], query: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = Some("ddcops-user-managment-frontend-poc-scala")) {
   <form method="get">
-    @govukInput(Input(
-      id = "search",
-      name = "query",
-      value = Some(query),
-      label = Label(
-        isPageHeading = true,
-        classes = "govuk-label--xl",
-        content = Text("Search users")
-      ),
-      hint = Some(Hint(content = Text("Enter all or part of a user detail to search users")))
-    ))
+    <div class="govuk-form-group">
+      <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--xl" for="query">
+        Search users
+      </label>
+      </h1>
+      <div id="query-hint" class="govuk-hint">
+        Enter all or part of a user detail to search users
+      </div>
+      <noscript>
+        <input class="govuk-input" id="query" name="query" value="@query" type="text" aria-describedby="query-hint">
+      </noscript>
+      <div id="query-wrapper"></div>
+      <script @{
+        CSPNonce.attr
+      }>
+              document.addEventListener("DOMContentLoaded", function () {
+                accessibleAutocomplete({
+                  element: document.getElementById("query-wrapper"),
+                  id: "query",
+                  name: "query",
+                  defaultValue: "@query",
+                  source: function (query, populateResults) {
+                    options = {}
+                    options.headers = {}
+                    options.headers['X-Requested-With'] = 'XMLHttpRequest'
+                    fetch('@uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.controllers.routes.UserSearchController.userSearch()?query=' + encodeURI(query), options)
+                            .then(response => response.json())
+                            .then(users => populateResults(users.map(user => user.fullName)));
+                  }
+                });
+              });
+      </script>
+    </div>
+
     @govukButton(Button(inputType = Some("submit"), content = Text("Search")))
-    @* TODO move button to be to the right of search field *@
   </form>
-  <ul>
-    @* TODO output as a table *@
-    @for(user <- users) {
-      <li>@user.title @user.firstName</li>
-    }
-  </ul>
+  @if(query.trim.nonEmpty) {
+    @govukTable(Table(
+      rows = users.map(user => {
+        Seq(
+          TableRow(
+            content = Text(user.username)
+          ),
+          TableRow(
+            content = Text(user.email)
+          )
+        )
+      }),
+      head = Some(Seq(
+        HeadCell(
+          content = Text("Username")
+        ),
+        HeadCell(
+          content = Text("Email")
+        )
+      )),
+      firstCellIsHeader = false
+    ))
+  }
 }

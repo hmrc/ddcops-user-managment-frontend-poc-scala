@@ -16,6 +16,10 @@
 
 package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain
 
-case class User(title: String, firstName: String)
+import play.api.libs.json._
 
-// TODO define json writer for User
+case class User(fullName: String, email: String, username: String)
+
+object User {
+  implicit val userWrites: OWrites[User] = Json.writes[User]
+}
