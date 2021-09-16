@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain.User
+package uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain
 
-@this(layout: Layout)
-
-@(users: List[User])(implicit request: Request[_], messages: Messages)
-
-@layout(pageTitle = Some("ddcops-user-managment-frontend-poc-scala")) {
-    <h1 class="govuk-heading-xl">ddcops-user-managment-frontend-poc-scala</h1>
-    <p class="govuk-body">@{messages("user.text")}</p>
-    <ul>
-    @for(user <- users) {
-      <li>@user.title @user.firstName</li>
-    }
-    </ul>
-}
+case class User(title: String, firstName: String)

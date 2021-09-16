@@ -37,36 +37,10 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.Configuration
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.connectors.UserConnector
+import uk.gov.hmrc.ddcopsusermanagmentfrontendpocscala.domain.User
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.test.{HttpClientSupport, WireMockSupport}
-
-import scala.concurrent.{ExecutionContext, Future}
-
-case class User(title: String, firstName: String)
-
-class UserConnector(httpClient: HttpClient, configuration: Configuration)(implicit
-  executionContext: ExecutionContext
-) {
-  val baseUrl: String =
-    configuration.get[String](
-      "connector.url"
-    )
-
-  implicit val readsUser: Reads[User] = (
-    (JsPath \ "name" \ "title").read[String] and
-      (JsPath \ "name" \ "first").read[String]
-  )(User.apply _)
-
-  def search(query: String)(implicit hc: HeaderCarrier): Future[List[User]] =
-    httpClient
-      .GET[HttpResponse](
-            url = url"$baseUrl?seed=$query"
-      )
-      .map(response => Json.parse(response.body)("results").as[List[User]])
-}
 
 class UserConnectorSpec
     extends AnyWordSpec
