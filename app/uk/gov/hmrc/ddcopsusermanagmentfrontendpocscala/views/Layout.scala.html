@@ -24,8 +24,18 @@
 )
 @(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
+@additionalScripts = {
+  <script @{CSPNonce.attr} src="@routes.Assets.versioned("javascripts/accessible-autocomplete.js")"></script>
+}
+  
+@additionalStyles = {
+  <link @{CSPNonce.attr} href="@routes.Assets.versioned("stylesheets/accessible-autocomplete.css")" rel="stylesheet">
+}
+  
 @hmrcLayout(
     pageTitle = pageTitle,
     nonce = CSPNonce.get,
-    isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
+    isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled,
+   additionalScriptsBlock	= Some(additionalScripts),
+  additionalHeadBlock	= Some(additionalStyles)
 )(contentBlock)
