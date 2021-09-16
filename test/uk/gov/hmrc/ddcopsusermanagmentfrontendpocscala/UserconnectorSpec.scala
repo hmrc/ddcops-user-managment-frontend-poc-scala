@@ -63,7 +63,7 @@ class UserConnector(httpClient: HttpClient, configuration: Configuration)(implic
   def search(query: String)(implicit hc: HeaderCarrier): Future[List[User]] =
     httpClient
       .GET[HttpResponse](
-        url = url"$baseUrl/search-user"
+            url = url"$baseUrl?seed=$query"
       )
       .map(response => Json.parse(response.body)("results").as[List[User]])
 }
@@ -79,13 +79,13 @@ class UserConnectorSpec
 
   val userConnector = new UserConnector(
     httpClient,
-    Configuration("connector.url" -> wireMockUrl)
+    Configuration("connector.url" -> s"$wireMockUrl/api")
   )
 
   "user connector" should {
     "be able to fetch users" in {
       stubFor(
-        get(urlEqualTo("/search-user"))
+        get(urlEqualTo("/api?seed=John"))
           .willReturn(
             aResponse()
               .withStatus(200)
@@ -104,11 +104,11 @@ class UserConnectorSpec
           )
       )
 
-      userConnector.search("John Lennon").futureValue shouldBe List(
+      userConnector.search("John").futureValue shouldBe List(
         User(title = "mr", firstName = "John")
       )
 
-      verify(getRequestedFor(urlEqualTo("/search-user")))
+      verify(getRequestedFor(urlEqualTo("/api?seed=John")))
     }
   }
 }
