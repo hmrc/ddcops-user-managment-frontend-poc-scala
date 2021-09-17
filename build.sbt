@@ -25,3 +25,14 @@ lazy val microservice = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
+  .settings(
+    dockerExposedPorts := Seq(9000),
+    javaOptions in Universal ++= Seq(
+      "-J-Xmx1024m",
+      "-J-Xms512m",
+      // don't write any pid files
+      "-Dpidfile.path=/dev/null",
+      // reference a logback config file that has no file appenders
+      "-Dlogback.configurationFile=logback-prod.xml"
+    )
+  )
