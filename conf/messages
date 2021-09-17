@@ -1,2 +1,3 @@
 service.name = ddcops-user-managment-frontend-poc-scala
 service.text = This is your new service
+user.text = This is your user service for user search
