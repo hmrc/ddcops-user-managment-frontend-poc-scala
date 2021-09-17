@@ -1,6 +1,8 @@
 
 # ddcops-user-managment-frontend-poc-scala
 
+[![Brought to you by TeamDDCOps](https://img.shields.io/badge/MDTP-DDCOps-40D9C0?style=flat&labelColor=000000&logo=gov.uk)](https://confluence.tools.tax.service.gov.uk/display/Tools) **owned with pride by DDCOps**
+
 This is a proof of concept to show the structure of a server side rendered play application for comparison with other
 examples in react and python.
 
@@ -40,7 +42,7 @@ $ docker images
 REPOSITORY                                 TAG                              IMAGE ID       CREATED          SIZE
 ddcops-user-managment-frontend-poc-scala   0.1.0-SNAPSHOT                   27799cc0f1e9   4 minutes ago    604MB
 $ docker run -P --rm ddcops-user-managment-frontend-poc-scala:0.1.0-SNAPSHOT
-$ docker ps 
+$ docker ps
 CONTAINER ID   IMAGE                                                     COMMAND                  CREATED         STATUS        PORTS                     NAMES
 ffdb2d3860d8   ddcops-user-managment-frontend-poc-scala:0.1.0-SNAPSHOT   "/opt/docker/bin/ddc…"   3 seconds ago   Up 1 second   0.0.0.0:55001->9000/tcp   ecstatic_borg
 ```
